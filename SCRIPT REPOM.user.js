@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         🚛 PCP REPOM AUTO TURBO UNIFICADO
 // @namespace    http://tampermonkey.net/
-// @version      10.0
+// @version      10.1
+// @updateURL    https://raw.githubusercontent.com/davigeneroso-wq/pcp-repom/main/SCRIPT%20REPOM.user.js
+// @downloadURL  https://raw.githubusercontent.com/davigeneroso-wq/pcp-repom/main/SCRIPT%20REPOM.user.js
 // @description  PCP Automação Repom - Turbo + Rotas Automáticas por ID + Alteração de Rota pelo Usuário
 // @match        https://www.repom.com.br/*
 // @grant        none
