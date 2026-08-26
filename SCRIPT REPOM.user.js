@@ -2,8 +2,6 @@
 // @name         🚛 PCP REPOM AUTO TURBO UNIFICADO
 // @namespace    http://tampermonkey.net/
 // @version      10.1
-// @updateURL    https://raw.githubusercontent.com/davigeneroso-wq/pcp-repom/main/SCRIPT%20REPOM.user.js
-// @downloadURL  https://raw.githubusercontent.com/davigeneroso-wq/pcp-repom/main/SCRIPT%20REPOM.user.js
 // @description  PCP Automação Repom - Turbo + Rotas Automáticas por ID + Alteração de Rota pelo Usuário
 // @match        https://www.repom.com.br/*
 // @grant        none
@@ -1387,6 +1385,14 @@ ultimo
 caixa.classList.add(
 "pcpMotoristaSelecionado"
 );
+
+if(
+m.nome === ultimo
+){
+
+caixaUltimo = caixa;
+
+}
 
 const lista=
 document.querySelector(
@@ -4459,10 +4465,10 @@ style.textContent=`
 #pcpSistema{
 
 position:fixed;
-top:60px;
+top:40px;
 right:15px;
-width:430px;
-height:calc(100vh - 75px);
+width:470px;
+height:calc(100vh - 55px);
 background:#f4f6f8;
 border:1px solid #ccc;
 border-radius:14px;
@@ -4470,6 +4476,8 @@ box-shadow:0 10px 35px rgba(0,0,0,.3);
 z-index:2147483647;
 font-family:Arial;
 overflow:hidden;
+display:flex;
+flex-direction:column;
 
 }
 
@@ -4562,10 +4570,23 @@ background:#f8d7da;
 
 #pcpLista{
 
-height:calc(100% - 350px);
+flex:1;
+
+min-height:0;
+
+height:auto;
+
 overflow-y:auto;
+
 overflow-x:hidden;
-padding:10px;
+
+padding:6px 10px;
+
+padding-bottom:260px;
+
+box-sizing:border-box;
+
+scroll-behavior:smooth;
 
 }
 
@@ -4669,18 +4690,29 @@ font-weight:bold;
 
 #pcpLog{
 
-position:absolute;
-left:10px;
-right:10px;
-bottom:10px;
-height:105px;
-padding:8px;
+position:relative;
+
+width:calc(100% - 20px);
+
+height:40px;
+
+margin:5px 10px 8px;
+
+padding:6px;
+
 box-sizing:border-box;
+
 background:#202124;
+
 color:white;
+
 border-radius:8px;
+
 overflow-y:auto;
-font-size:10px;
+
+font-size:9px;
+
+flex-shrink:0;
 
 }
 
@@ -5451,10 +5483,13 @@ document.querySelector(
 if(!lista)
 return;
 
-const resumo = contarStatus();
+const resumo =
+contarStatus();
 
 const campoResumo =
-document.querySelector("#pcpResumo");
+document.querySelector(
+"#pcpResumo"
+);
 
 if(campoResumo){
 
@@ -5479,6 +5514,7 @@ const ultimo=
 obterUltimoMotorista();
 
 lista.innerHTML="";
+
 
 const encontrados=
 motoristas.filter(
@@ -5556,10 +5592,13 @@ buscaOk
 }
 );
 
+let caixaUltimo=null;
+
 encontrados.forEach(
 m=>{
 
-m = obterMotoristaConfigurado(m);
+m =
+obterMotoristaConfigurado(m);
 
 const caixa=
 document.createElement(
@@ -5569,21 +5608,33 @@ document.createElement(
 caixa.className=
 "pcpMotorista";
 
-const statusAtual = pegarStatusMotorista(m.nome);
+const statusAtual =
+pegarStatusMotorista(
+m.nome
+);
 
-if(statusAtual.status==="feito"){
+if(
+statusAtual.status===
+"feito"
+){
 
-caixa.style.borderLeft="5px solid green";
+caixa.style.borderLeft=
+"5px solid green";
 
 }
-else if(statusAtual.status==="processando"){
+else if(
+statusAtual.status===
+"processando"
+){
 
-caixa.style.borderLeft="5px solid orange";
+caixa.style.borderLeft=
+"5px solid orange";
 
 }
 else{
 
-caixa.style.borderLeft="5px solid red";
+caixa.style.borderLeft=
+"5px solid red";
 
 }
 
@@ -5595,6 +5646,9 @@ ultimo
 caixa.classList.add(
 "ultimoMotorista"
 );
+
+caixaUltimo=
+caixa;
 
 }
 
@@ -5626,19 +5680,28 @@ caixa.innerHTML=`
 ${m.nome}
 </div>
 
-${filtroAtual==="CARRETAS_INTERIOR" ? `
+${
+filtroAtual===
+"CARRETAS_INTERIOR"
+?
+`
 <div>
 🚛 Cavalo: ${m.placa}
 </div>
 
 <div>
-🔗 Carreta: ${m.conjunto||"SEM CARRETA"}
+🔗 Carreta:
+${m.conjunto||"SEM CARRETA"}
 </div>
-` : `
+`
+:
+`
 <div>
 🚛 Placa: ${m.placa}
 </div>
-`}
+`
+}
+
 <div>
 🏢 CNPJ: ${m.cnpj}
 </div>
@@ -5653,11 +5716,20 @@ ${filtroAtual==="CARRETAS_INTERIOR" ? `
 
 <div class="pcpStatusMotorista">
 ${
-pegarStatusMotorista(m.nome).status==="feito"
+pegarStatusMotorista(
+m.nome
+).status===
+"feito"
 ?
-"🟢 PEDÁGIO OK - "+pegarStatusMotorista(m.nome).horario
+"🟢 PEDÁGIO OK - "+
+pegarStatusMotorista(
+m.nome
+).horario
 :
-pegarStatusMotorista(m.nome).status==="processando"
+pegarStatusMotorista(
+m.nome
+).status===
+"processando"
 ?
 "🟡 EM PROCESSO"
 :
@@ -5721,20 +5793,29 @@ caixa.classList.add(
 "pcpMotoristaSelecionado"
 );
 
-const rectLista = lista.getBoundingClientRect();
-const rectCaixa = caixa.getBoundingClientRect();
+const rectLista =
+lista.getBoundingClientRect();
+
+const rectCaixa =
+caixa.getBoundingClientRect();
 
 const topo =
 lista.scrollTop +
-(rectCaixa.top - rectLista.top) -
+(rectCaixa.top -
+rectLista.top) -
 (lista.clientHeight / 2) +
 (rectCaixa.height / 2);
 
 lista.scrollTo({
 
-    top: topo,
+top:
+Math.max(
+0,
+topo
+),
 
-    behavior: "smooth"
+behavior:
+"smooth"
 
 });
 
@@ -5804,8 +5885,56 @@ caixa
 }
 );
 
+
+/* =====================================================
+CENTRALIZA O ÚLTIMO MOTORISTA
+===================================================== */
+
+if(caixaUltimo){
+
+setTimeout(
+()=>{
+
+const rectLista =
+lista.getBoundingClientRect();
+
+const rectCaixa =
+caixaUltimo.getBoundingClientRect();
+
+let topo =
+lista.scrollTop +
+(rectCaixa.top - rectLista.top) -
+(lista.clientHeight / 2) +
+(rectCaixa.height / 2);
+
+const maxScroll =
+lista.scrollHeight -
+lista.clientHeight;
+
+topo =
+Math.max(
+0,
+Math.min(
+topo,
+maxScroll
+)
+);
+
+lista.scrollTo({
+
+top:topo,
+
+behavior:"smooth"
+
+});
+
+},
+150
+);
+
 }
 
+}
 /* =====================================================
 FILTROS
 ===================================================== */
@@ -6220,13 +6349,20 @@ verificarRetornoRota();
 
 /* =====================================================
    📷 LEITURA DA ESCALA
-   NÃO ALTERA A AUTOMAÇÃO EXISTENTE
+   REGRA:
+   - Lê motorista + rota
+   - Motorista cadastrado → atualiza somente a rota
+   - Motorista não cadastrado → ignora
+   - NÃO cria motorista
+   - NÃO altera placa
+   - NÃO altera carreta
+   - NÃO altera a lógica do pedágio
 ===================================================== */
 
 (function iniciarLeituraEscala(){
 
     /* =================================================
-       ESTILO DO BOTÃO
+       ESTILO
     ================================================= */
 
     const styleEscala =
@@ -6236,25 +6372,21 @@ verificarRetornoRota();
 
         #pcpBotaoLerEscala{
 
-            position:absolute;
+            width:100%;
+            height:38px;
 
-            top:10px;
-            right:145px;
-
-            padding:6px 10px;
+            margin:8px 0;
 
             border:0;
-            border-radius:6px;
+            border-radius:7px;
 
             background:#202124;
             color:white;
 
-            font-size:10px;
+            font-size:11px;
             font-weight:bold;
 
             cursor:pointer;
-
-            z-index:5;
 
         }
 
@@ -6263,7 +6395,6 @@ verificarRetornoRota();
             background:#333;
 
         }
-
 
         #pcpModalEscala{
 
@@ -6276,7 +6407,6 @@ verificarRetornoRota();
             display:flex;
 
             align-items:center;
-
             justify-content:center;
 
             background:rgba(0,0,0,.68);
@@ -6287,11 +6417,9 @@ verificarRetornoRota();
 
         }
 
-
         #pcpModalEscala .pcpEscalaInterno{
 
             width:600px;
-
             max-width:100%;
 
             max-height:90vh;
@@ -6309,7 +6437,6 @@ verificarRetornoRota();
 
         }
 
-
         .pcpEscalaCabecalho{
 
             display:flex;
@@ -6321,18 +6448,15 @@ verificarRetornoRota();
             padding:18px 20px;
 
             background:#202124;
-
             color:white;
 
         }
-
 
         .pcpEscalaCabecalho strong{
 
             font-size:16px;
 
         }
-
 
         .pcpEscalaCabecalho span{
 
@@ -6345,7 +6469,6 @@ verificarRetornoRota();
             font-size:10px;
 
         }
-
 
         #pcpFecharEscala{
 
@@ -6366,7 +6489,6 @@ verificarRetornoRota();
 
         }
 
-
         .pcpEscalaConteudo{
 
             padding:20px;
@@ -6376,7 +6498,6 @@ verificarRetornoRota();
             overflow-y:auto;
 
         }
-
 
         #pcpArquivoEscala{
 
@@ -6395,7 +6516,6 @@ verificarRetornoRota();
             font-size:12px;
 
         }
-
 
         #pcpBotaoProcessarEscala{
 
@@ -6421,7 +6541,6 @@ verificarRetornoRota();
 
         }
 
-
         #pcpStatusEscala{
 
             margin-top:12px;
@@ -6438,13 +6557,11 @@ verificarRetornoRota();
 
         }
 
-
         #pcpResultadoEscala{
 
             margin-top:12px;
 
         }
-
 
         .pcpEscalaMotorista{
 
@@ -6464,7 +6581,6 @@ verificarRetornoRota();
 
         }
 
-
         .pcpEscalaIgnorado{
 
             padding:9px 12px;
@@ -6482,7 +6598,6 @@ verificarRetornoRota();
             font-size:10px;
 
         }
-
 
         .pcpEscalaTituloResultado{
 
@@ -6502,7 +6617,41 @@ verificarRetornoRota();
 
 
     /* =================================================
-       CRIA BOTÃO
+       NORMALIZAÇÃO
+    ================================================= */
+
+    function normalizarEscala(valor){
+
+        return String(valor || "")
+            .normalize("NFD")
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            )
+            .toUpperCase()
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+    }
+
+
+    function escaparEscala(valor){
+
+        return String(valor || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+
+    }
+
+
+    /* =================================================
+       BOTÃO
     ================================================= */
 
     function criarBotaoLerEscala(){
@@ -6514,40 +6663,48 @@ verificarRetornoRota();
         )
             return;
 
-
-        const cabecalho =
+        const painel =
             document.querySelector(
-                "#pcpCabecalho"
+                "#pcpSistema"
             );
 
-
-        if(!cabecalho)
+        if(!painel)
             return;
-
 
         const botao =
             document.createElement("button");
 
-
         botao.id =
             "pcpBotaoLerEscala";
-
 
         botao.type =
             "button";
 
-
         botao.innerHTML =
-            "📷 LER ESCALA";
-
+            "📷 LEITURA DA ESCALA";
 
         botao.onclick =
             abrirModalEscala;
 
+        const filtros =
+            document.querySelector(
+                "#pcpFiliais"
+            );
 
-        cabecalho.appendChild(
-            botao
-        );
+        if(filtros){
+
+            filtros.insertAdjacentElement(
+                "afterend",
+                botao
+            );
+
+        }else{
+
+            painel.appendChild(
+                botao
+            );
+
+        }
 
     }
 
@@ -6563,18 +6720,14 @@ verificarRetornoRota();
                 "#pcpModalEscala"
             );
 
-
         if(antigo)
             antigo.remove();
-
 
         const modal =
             document.createElement("div");
 
-
         modal.id =
             "pcpModalEscala";
-
 
         modal.innerHTML = `
 
@@ -6589,11 +6742,10 @@ verificarRetornoRota();
                         </strong>
 
                         <span>
-                            Identifica somente motoristas cadastrados
+                            Atualiza somente a rota de motoristas cadastrados
                         </span>
 
                     </div>
-
 
                     <button
                         id="pcpFecharEscala"
@@ -6604,7 +6756,6 @@ verificarRetornoRota();
 
                 </div>
 
-
                 <div class="pcpEscalaConteudo">
 
                     <input
@@ -6613,7 +6764,6 @@ verificarRetornoRota();
                         accept="image/*"
                     >
 
-
                     <button
                         id="pcpBotaoProcessarEscala"
                         type="button"
@@ -6621,13 +6771,9 @@ verificarRetornoRota();
                         🔎 LER ESCALA
                     </button>
 
-
                     <div id="pcpStatusEscala">
-
                         Selecione a imagem da escala.
-
                     </div>
-
 
                     <div
                         id="pcpResultadoEscala"
@@ -6639,22 +6785,200 @@ verificarRetornoRota();
 
         `;
 
-
-        document.body.appendChild(
-            modal
-        );
-
+        document.body.appendChild(modal);
 
         modal.querySelector(
             "#pcpFecharEscala"
         ).onclick =
             () => modal.remove();
 
-
         modal.querySelector(
             "#pcpBotaoProcessarEscala"
         ).onclick =
             processarImagemEscala;
+
+    }
+
+
+    /* =================================================
+       TESSERACT
+    ================================================= */
+
+    function carregarTesseractEscala(){
+
+        return new Promise(
+            (resolve,reject)=>{
+
+                if(
+                    typeof Tesseract !==
+                    "undefined"
+                ){
+
+                    resolve();
+
+                    return;
+
+                }
+
+                const script =
+                    document.createElement("script");
+
+                script.src =
+                    "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+
+                script.onload =
+                    () => {
+
+                        if(
+                            typeof Tesseract !==
+                            "undefined"
+                        ){
+
+                            resolve();
+
+                        }else{
+
+                            reject(
+                                new Error(
+                                    "Tesseract indisponível."
+                                )
+                            );
+
+                        }
+
+                    };
+
+                script.onerror =
+                    () =>
+                        reject(
+                            new Error(
+                                "Não foi possível carregar o OCR."
+                            )
+                        );
+
+                document.head.appendChild(script);
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
+       PREPARAR IMAGEM
+    ================================================= */
+
+    function prepararImagemEscala(
+        arquivo
+    ){
+
+        return new Promise(
+            (resolve,reject)=>{
+
+                const img =
+                    new Image();
+
+                const url =
+                    URL.createObjectURL(
+                        arquivo
+                    );
+
+                img.onload =
+                    function(){
+
+                        try{
+
+                            const limite =
+                                4000;
+
+                            let largura =
+                                img.naturalWidth;
+
+                            let altura =
+                                img.naturalHeight;
+
+                            if(
+                                largura >
+                                limite
+                            ){
+
+                                const escala =
+                                    limite /
+                                    largura;
+
+                                largura =
+                                    limite;
+
+                                altura =
+                                    Math.round(
+                                        altura *
+                                        escala
+                                    );
+
+                            }
+
+                            const canvas =
+                                document.createElement(
+                                    "canvas"
+                                );
+
+                            canvas.width =
+                                largura;
+
+                            canvas.height =
+                                altura;
+
+                            const ctx =
+                                canvas.getContext(
+                                    "2d"
+                                );
+
+                            ctx.drawImage(
+                                img,
+                                0,
+                                0,
+                                largura,
+                                altura
+                            );
+
+                            URL.revokeObjectURL(
+                                url
+                            );
+
+                            resolve(canvas);
+
+                        }catch(e){
+
+                            URL.revokeObjectURL(
+                                url
+                            );
+
+                            reject(e);
+
+                        }
+
+                    };
+
+                img.onerror =
+                    () => {
+
+                        URL.revokeObjectURL(
+                            url
+                        );
+
+                        reject(
+                            new Error(
+                                "Imagem inválida."
+                            )
+                        );
+
+                    };
+
+                img.src =
+                    url;
+
+            }
+        );
 
     }
 
@@ -6668,20 +6992,17 @@ verificarRetornoRota();
         const arquivo =
             document.querySelector(
                 "#pcpArquivoEscala"
-            ).files[0];
-
+            )?.files?.[0];
 
         const status =
             document.querySelector(
                 "#pcpStatusEscala"
             );
 
-
         const resultado =
             document.querySelector(
                 "#pcpResultadoEscala"
             );
-
 
         if(!arquivo){
 
@@ -6692,37 +7013,23 @@ verificarRetornoRota();
 
         }
 
-
-        status.innerHTML =
-            "⏳ Lendo a escala...";
-
-
         resultado.innerHTML =
             "";
 
-
         try{
 
-            /*
-             * Usa Tesseract já disponível
-             * ou carrega automaticamente.
-             */
+            status.innerHTML =
+                "⏳ Carregando OCR...";
 
-            if(
-                typeof Tesseract ===
-                "undefined"
-            ){
+            await carregarTesseractEscala();
 
-                await carregarTesseract();
-
-            }
-
+            status.innerHTML =
+                "⏳ Preparando imagem...";
 
             const imagem =
-                await criarImagemProcessavel(
+                await prepararImagemEscala(
                     arquivo
                 );
-
 
             const leitura =
                 await Tesseract.recognize(
@@ -6734,19 +7041,16 @@ verificarRetornoRota();
                             info => {
 
                                 if(
-                                    info.status ===
+                                    info?.status ===
                                     "recognizing text"
                                 ){
 
-                                    const porcentagem =
-                                        Math.round(
-                                            info.progress *
-                                            100
-                                        );
-
                                     status.innerHTML =
                                         "⏳ Lendo escala: " +
-                                        porcentagem +
+                                        Math.round(
+                                            (info.progress || 0) *
+                                            100
+                                        ) +
                                         "%";
 
                                 }
@@ -6756,24 +7060,26 @@ verificarRetornoRota();
                     }
                 );
 
-
             const texto =
-                leitura.data.text ||
+                leitura?.data?.text ||
                 "";
 
+            console.log(
+                "📷 OCR ESCALA:",
+                texto
+            );
 
             analisarTextoEscala(
                 texto
             );
 
-
-        }catch(erro){
+        }
+        catch(erro){
 
             console.error(
-                "Erro leitura escala:",
+                "❌ ERRO LEITURA ESCALA:",
                 erro
             );
-
 
             status.innerHTML =
                 "❌ Erro ao ler a imagem.";
@@ -6784,153 +7090,366 @@ verificarRetornoRota();
 
 
     /* =================================================
-       CARREGAR TESSERACT
+       LOCALIZAR LINHA DO MOTORISTA
     ================================================= */
 
-    function carregarTesseract(){
-
-        return new Promise(
-            (resolve,reject)=>{
-
-                const script =
-                    document.createElement(
-                        "script"
-                    );
-
-
-                script.src =
-                    "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
-
-
-                script.onload =
-                    resolve;
-
-
-                script.onerror =
-                    reject;
-
-
-                document.head.appendChild(
-                    script
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =================================================
-       PREPARAR IMAGEM
-    ================================================= */
-
-    function criarImagemProcessavel(
-        arquivo
+    function localizarLinhaMotorista(
+        texto,
+        motorista
     ){
 
-        return new Promise(
-            (resolve,reject)=>{
+        const linhas =
+            String(texto || "")
+                .split(/\r?\n/)
+                .map(
+                    l =>
+                        l.trim()
+                )
+                .filter(Boolean);
 
-                const img =
-                    new Image();
+        const nome =
+            normalizarEscala(
+                motorista.nome
+            );
 
+        const nomeBase =
+            nome
+                .split("(")[0]
+                .trim();
 
-                img.onload =
-                    function(){
+        for(
+            let i = 0;
+            i < linhas.length;
+            i++
+        ){
 
-                        /*
-                         * Redimensiona imagens muito grandes.
-                         * Isso evita OCR desnecessariamente pesado.
-                         */
+            const linha =
+                normalizarEscala(
+                    linhas[i]
+                );
 
-                        const limite =
-                            2500;
+            if(
+                linha.includes(nome)
+            ){
 
-
-                        let largura =
-                            img.naturalWidth;
-
-
-                        let altura =
-                            img.naturalHeight;
-
-
-                        if(
-                            largura >
-                            limite
-                        ){
-
-                            const escala =
-                                limite /
-                                largura;
-
-
-                            largura =
-                                limite;
-
-
-                            altura =
-                                Math.round(
-                                    altura *
-                                    escala
-                                );
-
-                        }
-
-
-                        const canvas =
-                            document.createElement(
-                                "canvas"
-                            );
-
-
-                        canvas.width =
-                            largura;
-
-
-                        canvas.height =
-                            altura;
-
-
-                        const ctx =
-                            canvas.getContext(
-                                "2d"
-                            );
-
-
-                        ctx.drawImage(
-                            img,
-                            0,
-                            0,
-                            largura,
-                            altura
-                        );
-
-
-                        resolve(
-                            canvas
-                        );
-
-                    };
-
-
-                img.onerror =
-                    reject;
-
-
-                img.src =
-                    URL.createObjectURL(
-                        arquivo
-                    );
+                return linha;
 
             }
-        );
+
+            if(
+                nomeBase.length >= 8 &&
+                linha.includes(nomeBase)
+            ){
+
+                return linha;
+
+            }
+
+        }
+
+        return "";
 
     }
 
 
     /* =================================================
-       ANALISAR TEXTO DA ESCALA
+       EXTRAIR ROTA
+    ================================================= */
+
+    function extrairRotaLinha(
+        linha
+    ){
+
+        let texto =
+            normalizarEscala(
+                linha
+            );
+
+        if(!texto)
+            return "";
+
+        const origem =
+            "CD SUMARE";
+
+        const posOrigem =
+            texto.indexOf(
+                origem
+            );
+
+        if(
+            posOrigem === -1
+        ){
+
+            return "";
+
+        }
+
+        let rota =
+            texto.substring(
+                posOrigem +
+                origem.length
+            )
+            .trim();
+
+        const operacoes = [
+
+            "DISTRIBUICAO",
+            "COLETA",
+            "EXTRA",
+            "INDISPONIVEL"
+
+        ];
+
+        let fim =
+            rota.length;
+
+        operacoes.forEach(
+            operacao => {
+
+                const pos =
+                    rota.indexOf(
+                        operacao
+                    );
+
+                if(
+                    pos >= 0 &&
+                    pos < fim
+                ){
+
+                    fim = pos;
+
+                }
+
+            }
+        );
+
+        rota =
+            rota.substring(
+                0,
+                fim
+            )
+            .trim();
+
+        rota =
+            rota.replace(
+                /\b[A-Z]{3}[0-9][A-Z0-9][0-9]{2}\b/g,
+                ""
+            );
+
+        rota =
+            rota.replace(
+                /\b[A-Z]{3}[0-9]{4}\b/g,
+                ""
+            );
+
+        return rota
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+    }
+
+
+    /* =================================================
+       SALVAR SOMENTE ROTA
+    ================================================= */
+
+    function salvarRotaEscala(
+        motorista,
+        rotaNome
+    ){
+
+        const nome =
+            motorista.nome;
+
+        const rotas =
+            obterRotas();
+
+        const antiga =
+            obterRotaMotorista(
+                nome
+            );
+
+        const rotaAntiga =
+            antiga.length
+                ? antiga[0]
+                : "";
+
+        const rotaN =
+            normalizarEscala(
+                rotaNome
+            );
+
+
+        /* =============================================
+           CAMPINAS
+           SOMENTE REMOVE ROTA.
+           NÃO BLOQUEIA PEDÁGIO.
+        ============================================= */
+
+        if(
+            rotaN.includes("CAMPINAS")
+        ){
+
+            rotas[nome] = [];
+
+            salvarRotas(
+                rotas
+            );
+
+            return {
+
+                alterada:
+                    rotaAntiga !== "",
+
+                antiga:
+                    rotaAntiga,
+
+                nova:
+                    "",
+
+                bloqueada:false,
+
+                fixa:false
+
+            };
+
+        }
+
+
+        /* =============================================
+           MAPA DAS ROTAS
+        ============================================= */
+
+        const mapa = {
+
+            "SAO PAULO":
+                "SAO_PAULO",
+
+            "SAO JOSE DOS CAMPOS":
+                "SAO_JOSE_CAMPOS",
+
+            "SAO JOSE CAMPOS":
+                "SAO_JOSE_CAMPOS",
+
+            "INDAIATUBA":
+                "INDAIATUBA",
+
+            "JUNDIAI":
+                "JUNDIAI",
+
+            "SANTOS":
+                "SANTOS",
+
+            "FRANCA":
+                "FRANCA",
+
+            "SOROCABA":
+                "SOROCABA",
+
+            "PIRACICABA":
+                "PIRACICABA",
+
+            "LIMEIRA":
+                "LIMEIRA",
+
+            "ITU":
+                "ITU",
+
+            "SAO CARLOS":
+                "SAO_CARLOS",
+
+            "SANTO ANDRE":
+                "SANTO_ANDRE",
+
+            "RIBEIRAO PRETO":
+                "RIBEIRAO_PRETO",
+
+            "SAO JOSE DO RIO PRETO":
+                "SAO_JOSE_RIO_PRETO",
+
+            "BRASILIA":
+                "BRASILIA"
+
+        };
+
+
+        const nomeBonito =
+            rotaNome
+                .toUpperCase()
+                .replace(
+                    /\s+/g,
+                    " "
+                )
+                .trim();
+
+
+        const chave =
+            mapa[nomeBonito];
+
+
+        if(!chave){
+
+            return {
+
+                alterada:false,
+
+                desconhecida:true,
+
+                texto:
+                    rotaNome
+
+            };
+
+        }
+
+
+        if(
+            rotaAntiga === chave
+        ){
+
+            return {
+
+                alterada:false,
+
+                antiga:
+                    chave,
+
+                nova:
+                    chave
+
+            };
+
+        }
+
+
+        rotas[nome] =
+            [chave];
+
+        salvarRotas(
+            rotas
+        );
+
+
+        return {
+
+            alterada:true,
+
+            antiga:
+                rotaAntiga,
+
+            nova:
+                chave
+
+        };
+
+    }
+
+
+    /* =================================================
+       PROCESSAR TEXTO DA ESCALA
     ================================================= */
 
     function analisarTextoEscala(
@@ -6942,14 +7461,15 @@ verificarRetornoRota();
                 "#pcpStatusEscala"
             );
 
-
         const resultado =
             document.querySelector(
                 "#pcpResultadoEscala"
             );
 
-
-        if(!texto.trim()){
+        if(
+            !texto ||
+            !texto.trim()
+        ){
 
             status.innerHTML =
                 "❌ Nenhum texto foi identificado.";
@@ -6960,93 +7480,236 @@ verificarRetornoRota();
 
 
         /*
-         * IMPORTANTE:
+         * AQUI ESTÁ A REGRA PRINCIPAL:
          *
-         * A fonte oficial dos motoristas
-         * continua sendo obterTodosMotoristas().
+         * obterTodosMotoristas()
+         *
+         * pega somente quem já pertence
+         * ao PCP, incluindo os adicionados
+         * pela Configuração.
          */
 
         const cadastrados =
             obterTodosMotoristas();
 
 
-        const encontrados =
-            [];
+        const encontrados = [];
+
+        const ignorados = [];
 
 
-        const ignorados =
-            [];
-
+        /* =================================================
+           MOTORISTAS CADASTRADOS
+        ================================================= */
 
         cadastrados.forEach(
             motorista => {
 
-                const nome =
-                    normalizar(
-                        motorista.nome
+                const linha =
+                    localizarLinhaMotorista(
+                        texto,
+                        motorista
+                    );
+
+                /*
+                 * Não encontrou o motorista
+                 * na escala → não faz nada.
+                 */
+
+                if(!linha)
+                    return;
+
+
+                const rotaEscala =
+                    extrairRotaLinha(
+                        linha
                     );
 
 
-                const placa =
-                    normalizar(
-                        motorista.placa ||
-                        ""
-                    );
+                let resultadoRota =
+                    null;
 
 
-                const conjunto =
-                    normalizar(
-                        motorista.conjunto ||
-                        ""
-                    );
+                /*
+                 * SOMENTE ROTA É ALTERADA.
+                 */
+
+                if(
+                    rotaEscala
+                ){
+
+                    resultadoRota =
+                        salvarRotaEscala(
+                            motorista,
+                            rotaEscala
+                        );
+
+                }
 
 
-                const textoNormalizado =
-                    normalizar(
-                        texto
-                    );
-
-
-                const achouNome =
-                    nome.length >= 4 &&
-                    textoNormalizado.includes(
-                        nome
-                    );
-
-
-                const achouPlaca =
-                    placa.length >= 5 &&
-                    textoNormalizado.includes(
-                        placa
-                    );
-
-
-                const achouConjunto =
-                    conjunto.length >= 5 &&
-                    textoNormalizado.includes(
-                        conjunto
-                    );
+                const alteracoes = [];
 
 
                 if(
-                    achouNome ||
-                    achouPlaca ||
-                    achouConjunto
+                    resultadoRota?.alterada
                 ){
 
-                    encontrados.push({
-                        motorista:
-                            motorista,
+                    alteracoes.push(
 
-                        porNome:
-                            achouNome,
+                        "✅ Rota atualizada: " +
 
-                        porPlaca:
-                            achouPlaca,
+                        (
+                            resultadoRota.antiga
+                                ?
+                                nomeBonitoRota(
+                                    resultadoRota.antiga
+                                )
+                                :
+                                "NÃO CONFIGURADA"
+                        ) +
 
-                        porConjunto:
-                            achouConjunto
-                    });
+                        " → " +
+
+                        escaparEscala(
+                            rotaEscala
+                        )
+
+                    );
+
+                }
+                else if(
+                    resultadoRota?.desconhecida
+                ){
+
+                    alteracoes.push(
+
+                        "⚠️ Rota não encontrada no Repom: " +
+
+                        escaparEscala(
+                            rotaEscala
+                        )
+
+                    );
+
+                }
+                else if(
+                    !rotaEscala
+                ){
+
+                    alteracoes.push(
+                        "⚠️ Rota não identificada na linha."
+                    );
+
+                }
+                else{
+
+                    alteracoes.push(
+                        "✅ Rota já estava configurada."
+                    );
+
+                }
+
+
+                encontrados.push({
+
+                    motorista:
+                        motorista,
+
+                    linha:
+                        linha,
+
+                    rotaEscala:
+                        rotaEscala,
+
+                    alteracoes:
+                        alteracoes
+
+                });
+
+            }
+        );
+
+
+        /* =================================================
+           MOTORISTAS NÃO CADASTRADOS
+
+           O OCR não cadastra ninguém.
+           Eles simplesmente são ignorados.
+        ================================================= */
+
+        const linhas =
+            String(texto || "")
+                .split(/\r?\n/)
+                .map(
+                    l =>
+                        normalizarEscala(l)
+                )
+                .filter(Boolean);
+
+
+        linhas.forEach(
+            linha => {
+
+                /*
+                 * Não tenta criar motorista.
+                 *
+                 * Apenas registra linhas que
+                 * não correspondem aos cadastrados
+                 * quando parecem conter uma placa.
+                 */
+
+                const temPlaca =
+                    /\b[A-Z]{3}[0-9][A-Z0-9][0-9]{2}\b/.test(
+                        linha
+                    ) ||
+                    /\b[A-Z]{3}[0-9]{4}\b/.test(
+                        linha
+                    );
+
+
+                if(!temPlaca)
+                    return;
+
+
+                const pertence =
+                    cadastrados.some(
+                        motorista => {
+
+                            const nome =
+                                normalizarEscala(
+                                    motorista.nome
+                                );
+
+                            const base =
+                                nome
+                                    .split("(")[0]
+                                    .trim();
+
+                            return (
+                                linha.includes(nome) ||
+                                (
+                                    base.length >= 8 &&
+                                    linha.includes(base)
+                                )
+                            );
+
+                        }
+                    );
+
+
+                if(!pertence){
+
+                    if(
+                        !ignorados.includes(
+                            linha
+                        )
+                    ){
+
+                        ignorados.push(
+                            linha
+                        );
+
+                    }
 
                 }
 
@@ -7055,57 +7718,29 @@ verificarRetornoRota();
 
 
         /*
-         * Detecta algumas placas que aparecem
-         * no texto mas não pertencem aos
-         * motoristas cadastrados.
+         * Atualiza a lista visual do Repom.
          *
-         * Essas serão apenas informadas,
-         * NUNCA adicionadas automaticamente.
+         * Não cria pedágio.
+         * Não executa função de pedágio.
+         * Apenas atualiza a interface porque a rota
+         * dos cadastrados foi alterada.
          */
 
-        const placasTexto =
-            extrairPlacas(
-                texto
-            );
+        motoristas =
+            obterTodosMotoristas();
 
 
-        placasTexto.forEach(
-            placa => {
-
-                const existe =
-                    cadastrados.some(
-                        m =>
-                            normalizar(
-                                m.placa ||
-                                ""
-                            ) ===
-                            normalizar(
-                                placa
-                            )
-                    );
-
-
-                if(!existe){
-
-                    ignorados.push(
-                        placa
-                    );
-
-                }
-
-            }
-        );
+        renderizarLista();
 
 
         exibirResultadoEscala(
             encontrados,
-            ignorados,
-            texto
+            ignorados
         );
 
 
         status.innerHTML =
-            "✅ Leitura concluída: " +
+            "✅ Escala processada: " +
             encontrados.length +
             " motorista(s) cadastrado(s) encontrado(s).";
 
@@ -7113,68 +7748,12 @@ verificarRetornoRota();
 
 
     /* =================================================
-       EXTRAIR PLACAS
-    ================================================= */
-
-    function extrairPlacas(
-        texto
-    ){
-
-        const resultado =
-            [];
-
-
-        const regex =
-            /\b[A-Z]{3}[- ]?[0-9][A-Z0-9][0-9]{2}\b/gi;
-
-
-        const encontrados =
-            texto.match(
-                regex
-            ) || [];
-
-
-        encontrados.forEach(
-            placa => {
-
-                const limpa =
-                    placa
-                    .toUpperCase()
-                    .replace(
-                        /[^A-Z0-9]/g,
-                        ""
-                    );
-
-
-                if(
-                    !resultado.includes(
-                        limpa
-                    )
-                ){
-
-                    resultado.push(
-                        limpa
-                    );
-
-                }
-
-            }
-        );
-
-
-        return resultado;
-
-    }
-
-
-    /* =================================================
-       MOSTRAR RESULTADO
+       RESULTADO
     ================================================= */
 
     function exibirResultadoEscala(
         encontrados,
-        ignorados,
-        texto
+        ignorados
     ){
 
         const resultado =
@@ -7182,26 +7761,24 @@ verificarRetornoRota();
                 "#pcpResultadoEscala"
             );
 
-
         if(!resultado)
             return;
 
 
-        let html = "";
-
-
-        html += `
+        let html = `
 
             <div class="pcpEscalaTituloResultado">
 
-                👥 MOTORISTAS ENCONTRADOS
+                👥 MOTORISTAS CADASTRADOS ENCONTRADOS
 
             </div>
 
         `;
 
 
-        if(!encontrados.length){
+        if(
+            !encontrados.length
+        ){
 
             html += `
 
@@ -7214,7 +7791,8 @@ verificarRetornoRota();
 
             `;
 
-        }else{
+        }
+        else{
 
             encontrados.forEach(
                 item => {
@@ -7223,56 +7801,46 @@ verificarRetornoRota();
                         item.motorista;
 
 
-                    const motivo = [];
-
-
-                    if(item.porNome)
-                        motivo.push(
-                            "nome"
-                        );
-
-
-                    if(item.porPlaca)
-                        motivo.push(
-                            "placa"
-                        );
-
-
-                    if(item.porConjunto)
-                        motivo.push(
-                            "carreta"
-                        );
+                    const rota =
+                        item.rotaEscala ||
+                        "NÃO IDENTIFICADA";
 
 
                     html += `
 
-                        <div class="pcpEscalaMotorista">
+                        <div
+                            class="pcpEscalaMotorista"
+                        >
 
                             <strong>
-                                ${m.nome}
+
+                                ${escaparEscala(
+                                    m.nome
+                                )}
+
                             </strong>
 
                             <br>
 
-                            🚛 ${m.placa || "SEM PLACA"}
+                            🛣️ Rota:
 
-                            ${
-                                m.conjunto
-                                ?
-                                "<br>🔗 " +
-                                m.conjunto
-                                :
-                                ""
-                            }
+                            ${escaparEscala(
+                                rota
+                            )}
 
-                            <br>
+                            <div
+                                style="
+                                    margin-top:7px;
+                                    line-height:1.6;
+                                "
+                            >
 
-                            <span>
-                                Encontrado por:
-                                ${motivo.join(
-                                    " + "
-                                )}
-                            </span>
+                                ${
+                                    item.alteracoes
+                                        .join("<br>")
+                                }
+
+                            </div>
 
                         </div>
 
@@ -7284,44 +7852,91 @@ verificarRetornoRota();
         }
 
 
-        if(ignorados.length){
+        if(
+            ignorados.length
+        ){
 
             html += `
 
                 <div class="pcpEscalaTituloResultado">
 
-                    🚫 VEÍCULOS IGNORADOS
+                    🚫 MOTORISTAS / LINHAS IGNORADAS
 
                 </div>
 
                 <div class="pcpEscalaIgnorado">
 
-                    ${ignorados
-                        .map(
-                            p =>
-                                "🚛 " + p
-                        )
-                        .join(
-                            "<br>"
-                        )
-                    }
+                    A leitura encontrou linhas
+                    que não correspondem a
+                    motoristas cadastrados no PCP.
 
                     <br><br>
 
-                    Esses veículos apareceram
-                    na escala, mas não estão
-                    cadastrados no sistema.
+                    ❌ Nenhum cadastro criado.
+
                     <br>
-                    <strong>
-                        Nenhum pedágio será criado
-                        para eles.
-                    </strong>
+
+                    ❌ Nenhuma placa alterada.
+
+                    <br>
+
+                    ❌ Nenhuma carreta alterada.
+
+                    <br>
+
+                    ❌ Nenhum pedágio criado.
 
                 </div>
 
             `;
 
         }
+
+
+        html += `
+
+            <div class="pcpEscalaTituloResultado">
+
+                ℹ️ REGRA DA LEITURA
+
+            </div>
+
+            <div class="pcpEscalaIgnorado">
+
+                A escala somente procura
+                motoristas que já estão
+                cadastrados no PCP.
+
+                <br><br>
+
+                Motoristas adicionados pela
+                CONFIGURAÇÃO também contam
+                como cadastrados.
+
+                <br><br>
+
+                A leitura atualiza
+                <strong>somente a rota</strong>.
+
+                <br><br>
+
+                Placa e carreta não são
+                alteradas pela escala.
+
+                <br><br>
+
+                Motorista que não existe
+                no PCP é ignorado.
+
+                <br><br>
+
+                A leitura da escala não
+                cria pedágio e não altera
+                a lógica existente do pedágio.
+
+            </div>
+
+        `;
 
 
         resultado.innerHTML =
@@ -7337,11 +7952,6 @@ verificarRetornoRota();
     criarBotaoLerEscala();
 
 
-    /*
-     * Como o painel pode ser recriado/alterado
-     * pela página, garante o botão novamente.
-     */
-
     const observerEscala =
         new MutationObserver(
             () => {
@@ -7352,13 +7962,17 @@ verificarRetornoRota();
         );
 
 
-    observerEscala.observe(
-        document.body,
-        {
-            childList:true,
-            subtree:true
-        }
-    );
+    if(document.body){
+
+        observerEscala.observe(
+            document.body,
+            {
+                childList:true,
+                subtree:true
+            }
+        );
+
+    }
 
 })();
 
