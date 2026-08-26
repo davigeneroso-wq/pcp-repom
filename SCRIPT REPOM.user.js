@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🚛 PCP REPOM AUTO TURBO UNIFICADO
 // @namespace    http://tampermonkey.net/
-// @version      10.1
+// @version      10.0
 // @description  PCP Automação Repom - Turbo + Rotas Automáticas por ID + Alteração de Rota pelo Usuário
 // @match        https://www.repom.com.br/*
 // @grant        none
@@ -475,8 +475,8 @@ FRANCA:{
 
 INDAIATUBA:{
     cidadeId:"4998",
-    roteiroId:"13458",
-    percursoId:"54"
+    roteiroId:"32369",
+    percursoId:"27"
 },
 
 ITATIBA_RENATO:{
@@ -566,7 +566,7 @@ SAO_JOSE_CAMPOS:{
 SOROCABA:{
     cidadeId:"4998",
     roteiroId:"32369",
-    percursoId:"30"
+    percursoId:"41"
 },
 
 SOROCABA_PIRACICABA:{
